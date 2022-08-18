@@ -16,8 +16,6 @@ public class BinBaum {
         Knoten t4 = new Knoten(4, null, new Knoten(12));
         Knoten t6 = new Knoten(6, new Knoten(36), t4);
         wurzel = new Knoten(5, t8, t6);
-
-        System.out.println(wurzel);;
     }
 
     public Knoten suche(Integer gesucht) {
@@ -27,8 +25,15 @@ public class BinBaum {
     public static void main(String[] args) {
         BinBaum bb = new BinBaum();
         System.out.println(bb.suche(5)); //? => Knoten(5)
+        System.out.println(bb.suche(8)); //? => Knoten(5)
+        System.out.println(bb.suche(4)); //? => Knoten(5)
+        System.out.println(bb.suche(6)); //? => Knoten(5)
+        System.out.println(bb.suche(3)); //? => Knoten(5)
+        System.out.println(bb.suche(12)); //? => Knoten(5)
         System.out.println(bb.suche(36)); //? => Knoten(36)
         System.out.println(bb.suche(0)); //? => null
+        System.out.println(bb.suche(37)); //? => null
+        System.out.println(bb.suche(13)); //? => null
+        System.out.println(bb.suche(9)); //? => null
     }
 }
-

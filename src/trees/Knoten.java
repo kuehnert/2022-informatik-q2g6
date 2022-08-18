@@ -21,11 +21,20 @@ class Knoten {
             return this;
         }
 
-        // Wenn nicht, dann frag linken TB nach dem gesuchten Knoten
-        // Wenn linker TB einen Knoten zurückgibt, gib diesen Knoten zurück
+        if (links != null) {
+            // Wenn nicht, dann frag linken TB, wenn es ihn gibt, nach dem gesuchten Knoten
+            Knoten ergebnis = links.suche(gesucht);
+            // Wenn linker TB einen Knoten zurückgibt, gib diesen Knoten zurück
+            if (ergebnis != null) {
+                return ergebnis;
+            }
+        }
 
-        // Wenn nicht, dann frag rechten TB nach dem gesuchten Knoten
-        // Wenn rechter TB einen Knoten zurückgibt, gib diesen Knoten zurück
+        if (rechts != null) {
+            // Wenn nicht, dann frag rechten TB nach dem gesuchten Knoten
+            // Wenn rechter TB einen Knoten zurückgibt, gib diesen Knoten zurück
+            return rechts.suche(gesucht);
+        }
 
         // Sonst null
         return null;
