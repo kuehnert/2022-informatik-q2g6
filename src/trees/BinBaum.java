@@ -17,29 +17,18 @@ public class BinBaum {
         Knoten t6 = new Knoten(6, new Knoten(36), t4);
         wurzel = new Knoten(5, t8, t6);
 
-        System.out.println(wurzel.gibAus());;
+        System.out.println(wurzel);;
     }
 
     public Knoten suche(Integer gesucht) {
         return wurzel.suche(gesucht);
     }
 
-    public void einfuegen(Integer data) {
-        Knoten newKnoten = new Knoten(data);
-        Knoten runner = wurzel;
-
-        while (true) {
-            // Sind die Daten größer als runner.data?
-            // Fehler, weil Datentyp "T" kein ">" kann!
-            if (runner.data > data) {
-
-            }
-        }
-
-    }
-
     public static void main(String[] args) {
-        new BinBaum();
+        BinBaum bb = new BinBaum();
+        System.out.println(bb.suche(5)); //? => Knoten(5)
+        System.out.println(bb.suche(36)); //? => Knoten(36)
+        System.out.println(bb.suche(0)); //? => null
     }
 }
 
