@@ -1,7 +1,19 @@
 package trees;
 
 public class BinSuchBaum {
-    Knoten wurzel;
+    private Knoten wurzel;
+
+    public BinSuchBaum(String s) {
+        einfuegen(s);
+    }
+
+    public void einfuegen(String s) {
+        String[] zahlenStr = s.split(" ");
+        for (String zahlStr: zahlenStr) {
+            int zahl = Integer.parseInt(zahlStr);
+            einfuegenLuca(zahl);
+        }
+    }
 
     public void einfuegenLuis(int data) {
         Knoten newKnoten = new Knoten(data);
@@ -68,15 +80,8 @@ public class BinSuchBaum {
     }
 
     public static void main(String[] args) {
-        BinSuchBaum bsb = new BinSuchBaum();
-        bsb.einfuegenLuca(5);
-        bsb.einfuegenLuca(9);
-        bsb.einfuegenLuca(2);
-        bsb.einfuegenLuca(32);
-        bsb.einfuegenLuca(6);
-        bsb.einfuegenLuca(8);
-        bsb.einfuegenLuca(7);
-        bsb.einfuegenLuca(4);
+        BinSuchBaum bsb = new BinSuchBaum("5 9 32 2 6 8 7 4");
+
         System.out.println(bsb);
     }
 }
