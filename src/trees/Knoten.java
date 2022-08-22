@@ -40,6 +40,7 @@ class Knoten {
         return null;
     }
 
+    // NLR-Ausgabe
     public String toString() {
         // 1. Gib die aktuelle Zahl aus
         String output = "" + data;
@@ -52,6 +53,27 @@ class Knoten {
         // 2. Wenn rechts ein Knoten ist, gib ihn aus
         if (rechts != null) {
             output += "<" + rechts.toString() + ">";
+        }
+
+        return output;
+    }
+
+    // LNR-Ausgabe
+    public String toStringSortiert() {
+        String output = "";
+
+        // 1. Wenn links ein Knoten ist, gib ihn aus
+        if (links != null) {
+            output += links.toStringSortiert();
+        }
+
+        // 2. Gib die aktuelle Zahl des Knotens aus
+        output += data + " ";
+
+
+        // 3. Wenn rechts ein Knoten ist, gib ihn aus
+        if (rechts != null) {
+            output += rechts.toStringSortiert();
         }
 
         return output;

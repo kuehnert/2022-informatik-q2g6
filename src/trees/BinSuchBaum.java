@@ -79,9 +79,17 @@ public class BinSuchBaum {
         }
     }
 
+    public String toStringSortiert() {
+        if (wurzel == null) {
+            return "Baum leer";
+        } else {
+            return wurzel.toStringSortiert();
+        }
+    }
+
     public static void main(String[] args) {
         BinSuchBaum bsb = new BinSuchBaum("5 9 32 2 6 8 7 4");
 
-        System.out.println(bsb);
+        System.out.println(bsb.toStringSortiert());
     }
 }
