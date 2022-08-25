@@ -15,6 +15,17 @@ class Knoten {
         this.rechts = rechts;
     }
 
+    public int tiefe() {
+        // Bestimme Tiefe vom linken TB, oder -1 wenn nicht existent
+        int tLinks = (links == null) ? -1 : links.tiefe();
+
+        // Bestimme Tiefe vom rechten TB, oder -1 wenn nicht existent
+        int tRechts = (rechts == null) ? -1 : rechts.tiefe();
+
+        // Gib die größere Zahl + 1 zurück
+        return Math.max(tLinks, tRechts) + 1;
+    }
+
     public Knoten suche(int gesucht) {
         // Wenn der Knoten der gesuchte ist, gibt er sich selbst zurück
         if (data == gesucht) {
