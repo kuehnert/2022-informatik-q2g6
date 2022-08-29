@@ -3,6 +3,10 @@ package trees;
 public class BinSuchBaum {
     private Knoten wurzel;
 
+    public BinSuchBaum() {
+        wurzel = null;
+    }
+
     public BinSuchBaum(String s) {
         einfuegen(s);
     }
@@ -89,5 +93,9 @@ public class BinSuchBaum {
 
     public int tiefe() {
         return wurzel.tiefe();
+    }
+
+    public int anzahl() {
+        return wurzel.anzahl();
     }
 }

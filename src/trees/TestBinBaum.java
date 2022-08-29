@@ -13,5 +13,15 @@ public class TestBinBaum {
 
         System.out.println(bsb.toStringSortiert());
         System.out.println(bsb.tiefe());
+        System.out.println(bsb.anzahl());
+
+        BinSuchBaum bsb2 = new BinSuchBaum("5");
+        System.out.println(bsb2.anzahl());
+
+        String rStr = ArrayHelper.randomString();
+        System.out.println(rStr);
+        BinSuchBaum bsb3 = new BinSuchBaum(rStr);
+        System.out.println(bsb3);
+        System.out.println(bsb3.anzahl());
     }
 }

@@ -15,6 +15,14 @@ class Knoten {
         this.rechts = rechts;
     }
 
+    public int anzahl() {
+        int anz = 1;
+        anz += (links == null) ? 0 : links.anzahl();
+        anz += (rechts == null) ? 0 : rechts.anzahl();
+
+        return anz;
+    }
+
     public int tiefe() {
         // Bestimme Tiefe vom linken TB, oder -1 wenn nicht existent
         int tLinks = (links == null) ? -1 : links.tiefe();
