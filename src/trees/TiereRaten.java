@@ -1,6 +1,5 @@
 package trees;
 
-import javax.net.ssl.SSLContextSpi;
 import java.util.Scanner;
 
 public class TiereRaten {
