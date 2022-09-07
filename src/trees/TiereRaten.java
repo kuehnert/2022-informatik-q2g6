@@ -15,13 +15,14 @@ public class TiereRaten {
     public void spiele() {
         System.out.println("Willkommen beim Expertensystem");
         Frage runner = wurzel;
+        Frage pred = null;
 
         // Schleife
         while (runner != null) {
-            System.out.println(runner.inhalt + " ");
-            boolean antwortJa = eingabe.nextLine().startsWith("j");
-
             if (runner.istTier()) {
+                System.out.println("Ist es ein(e) " + runner.inhalt + "? ");
+                boolean antwortJa = eingabe.nextLine().startsWith("j");
+
                 if (antwortJa) {
                     System.out.println("Hurrah, ich habe das Tier geraten und damit gewonnen!");
                 } else {
@@ -30,9 +31,18 @@ public class TiereRaten {
                     System.out.println("Stelle eine Frage, um altes Tier und neues Tier zu unterscheiden, und für die" +
                             " ja die Antwort für neues Tier ist. ");
                     String neueFrage = eingabe.nextLine();
-                    System.out.println("Würg.");
+
+                    // Vorsicht!
+                    pred.nein = new Frage(neueFrage);
+                    // Setze neuesTier auf linke Antwort
+                    // Setze altesTier auf rechte Antwort
+
                 }
             } else {
+                System.out.println(runner.inhalt + " ");
+                boolean antwortJa = eingabe.nextLine().startsWith("j");
+
+                pred = runner;
                 if (antwortJa) {
                     runner = runner.ja;
                 } else {
