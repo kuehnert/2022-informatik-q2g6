@@ -50,8 +50,9 @@ class Knoten {
         }
 
         if (rechts != null) {
-            // Wenn nicht, dann frag rechten TB nach dem gesuchten Knoten
-            // Wenn rechter TB einen Knoten zurückgibt, gib diesen Knoten zurück
+            // Wenn nicht, dann frag rechten TB nach dem gesuchten Knoten.
+            // Wenn rechter TB einen Knoten zurückgibt, gib diesen Knoten
+            // zurück.
             return rechts.suche(gesucht);
         }
 
@@ -66,12 +67,12 @@ class Knoten {
 
         // 2. Wenn links ein Knoten ist, gib ihn aus
         if (links != null) {
-            output += "[" + links.toString() + "]";
+            output += "[" + links + "]";
         }
 
         // 2. Wenn rechts ein Knoten ist, gib ihn aus
         if (rechts != null) {
-            output += "<" + rechts.toString() + ">";
+            output += "<" + rechts + ">";
         }
 
         return output;
@@ -96,5 +97,35 @@ class Knoten {
         }
 
         return output;
+    }
+
+    // https://leetcode.com/problems/balanced-binary-tree/
+    public boolean ausgeglichen() {
+        // ist ausgeglichen, wenn
+        // 1. lB ist ausgeglichen oder null
+        // 2. rB ist ausgeglichen oder null
+        // 3. Unterschied Tiefe lB und Tiefe rB ist max. 1
+        boolean lAusgeglichen;
+        boolean rAusgeglichen;
+        int lTiefe;
+        int rTiefe;
+
+        if (links == null) {
+            lAusgeglichen = true;
+            lTiefe = 0;
+        } else {
+            lAusgeglichen = links.ausgeglichen();
+            lTiefe = links.tiefe();
+        }
+
+        if (rechts == null) {
+            rAusgeglichen = true;
+            rTiefe = 0;
+        } else {
+            rAusgeglichen = rechts.ausgeglichen();
+            rTiefe = rechts.tiefe();
+        }
+
+        return lAusgeglichen && rAusgeglichen && Math.abs(rTiefe - lTiefe) < 2;
     }
 }
