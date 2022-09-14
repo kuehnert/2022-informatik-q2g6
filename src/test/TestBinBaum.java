@@ -31,6 +31,16 @@ public class TestBinBaum {
     }
 
     public static void main(String[] args) {
-        test1();
+        test4();
+    }
+
+    public static void test4() {
+        // Baum entspricht [3,9,20,null,null,15,7]
+        BinSuchBaum bsb = new BinSuchBaum("10 5 15 12 18");
+        System.out.println(bsb.ausgeglichen());
+
+        // Baum entspricht [1,2,2,3,3,null,null,4,4]
+        bsb = new BinSuchBaum("10 5 15 3 7 1 4");
+        System.out.println(bsb.ausgeglichen());
     }
 }
