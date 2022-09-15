@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class TiereRaten {
-    private static final String filename = "data/tierebaum.txt";
     Scanner eingabe = new Scanner(System.in);
     Frage wurzel;
 
@@ -16,7 +15,7 @@ public class TiereRaten {
     }
 
     public void spiele() {
-        System.out.println("Willkommen beim Expe--rtensystem");
+        System.out.println("Willkommen beim Expertensystem");
         boolean weiter = true;
 
         while (weiter) {
@@ -47,9 +46,6 @@ public class TiereRaten {
                     runner.ja = new Frage(neuesTierStr);
                     runner.nein = new Frage(runner.inhalt);
                     runner.inhalt = neueFrageStr;
-
-                    System.out.println("Neuer Baum: ");
-                    System.out.println(wurzel);
                 }
 
                 runner = null;
@@ -81,41 +77,8 @@ public class TiereRaten {
 
     public static void main(String[] args) {
         TiereRaten tr = new TiereRaten();
-        // tr.spiele();
-        // tr.speichern();
-        tr.laden();
+        tr.spiele();
         System.out.println(tr.toString());
-    }
-
-    public void speichern() {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(filename);
-            ObjectOutputStream objectOutputStream =
-                    new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(wurzel);
-            objectOutputStream.flush();
-            objectOutputStream.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void laden() {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(filename);
-            ObjectInputStream objectInputStream =
-                    new ObjectInputStream(fileInputStream);
-            wurzel = (Frage) objectInputStream.readObject();
-            objectInputStream.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
 
@@ -136,11 +99,11 @@ class Frage implements Serializable {
         String output = "" + inhalt;
 
         if (ja != null) {
-            output += "[" + ja + "]";
+            output += "<" + ja + ">";
         }
 
         if (nein != null) {
-            output += "<" + nein + ">";
+            output += "[" + nein + "]";
         }
 
         return output;
