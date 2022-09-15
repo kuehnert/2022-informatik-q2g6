@@ -1,9 +1,11 @@
 package trees;
 
+import java.io.*;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class TiereRaten {
+    private static final String filename = "data/tierebaum.txt";
     Scanner eingabe = new Scanner(System.in);
     Frage wurzel;
 
@@ -79,11 +81,45 @@ public class TiereRaten {
 
     public static void main(String[] args) {
         TiereRaten tr = new TiereRaten();
-        tr.spiele();
+        // tr.spiele();
+        // tr.speichern();
+        tr.laden();
+        System.out.println(tr.toString());
+    }
+
+    public void speichern() {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(filename);
+            ObjectOutputStream objectOutputStream =
+                    new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(wurzel);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void laden() {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(filename);
+            ObjectInputStream objectInputStream =
+                    new ObjectInputStream(fileInputStream);
+            wurzel = (Frage) objectInputStream.readObject();
+            objectInputStream.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
-class Frage {
+class Frage implements Serializable {
     String inhalt;
     Frage ja, nein;
 

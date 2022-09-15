@@ -2,6 +2,9 @@ package trees;
 
 import java.util.Stack;
 
+// https://www.baeldung.com/java-serialization
+// https://www.tutorialspoint.com/java/java_serialization.htm
+
 public class BinBaum {
     protected Knoten wurzel;
 
