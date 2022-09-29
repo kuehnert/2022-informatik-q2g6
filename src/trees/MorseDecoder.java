@@ -42,7 +42,8 @@ public class MorseDecoder {
 
     public static void main(String[] args) {
         var md = new MorseDecoder();
-        String botschaft = "./-/--.-/--.-/.-/../..../--.-/-.-/./-..././--/";
+        String botschaft = new MorseEncoder().encode("Hurra, wir leben nach " +
+                "der Kursfahrt noch (selbst nach Salzburg)");
         String quelle = md.decode(botschaft);
         System.out.println(botschaft);
         System.out.println(quelle);

@@ -2,9 +2,9 @@ package trees;
 
 public class MorseEncoder {
     private static final String[] CODES = {".-", "-...", "-.-.", "-..", ".",
-            "..-" + ".", "--", ".", "....", "..", ".---", "-.-", ".-..", "--"
-            , "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "..",
-            ".-", ".--", "-..-", "-.--", "--.."};
+            "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.",
+            "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--",
+            "-..-", "-.--", "--.."};
 
     private String clean(String in) {
         var out = new StringBuilder();
@@ -20,6 +20,18 @@ public class MorseEncoder {
 
     private int ord(char c) {
         return c - 'A';
+    }
+
+    public String ordString(String in) {
+        in = clean(in);
+        String out = "";
+
+        for (int i = 0; i < in.length(); i++) {
+            char c = in.charAt(i);
+            out += ord(c) + "/";
+        }
+
+        return out;
     }
 
     private String encodeChar(char c) {
@@ -46,6 +58,7 @@ public class MorseEncoder {
         var m = new MorseEncoder();
         String input = "Hurra, wir leben!";
         String output = m.encode(input);
-        System.out.printf("%s -> %s -> %s%n", input, m.clean(input), output);
+        System.out.printf("%s -> %s -> %s -> %s%n", input, m.clean(input),
+                m.ordString(input), output);
     }
 }
