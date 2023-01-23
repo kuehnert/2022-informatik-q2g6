@@ -19,26 +19,38 @@ public class EchoClient {
             Scanner tastatur = new Scanner(System.in);
             // ----------------------------------------------------------------
 
+            System.out.println("Lucas kleiner ECHO-Client. Tippe 'quit' zum " +
+                    "Beenden");
+
             // Empfange die Begrüßung vom Server & gib sie aus
             String input = reader.nextLine();
             System.out.println("RECEIVED: " + input);
             // Empfange Leerzeile, Fehler im Server
             input = reader.nextLine();
             System.out.println("RECEIVED: " + input);
+            String botschaft = "";
 
             // Hier kommt eine Schleife drumherum:
+            while (true) {
                 // Erfrage eine Eingabe vom Nutzer und sende sie über die Socket
                 System.out.print("Eingabe: ");
-                String botschaft = tastatur.nextLine();
-                System.out.println("EINGABE: " + botschaft);
-                writer.println(botschaft);
-                writer.flush();
+                botschaft = tastatur.nextLine();
 
-                // Empfange die Antwort vom Server & gib sie aus
-                input = reader.nextLine();
-                System.out.println("RECEIVED: " + input);
+                if (!botschaft.equalsIgnoreCase("quit")) {
+                    System.out.println("EINGABE: " + botschaft);
+                    writer.println(botschaft);
+                    writer.flush();
+
+                    // Empfange die Antwort vom Server & gib sie aus
+                    input = reader.nextLine();
+                    System.out.println("RECEIVED: " + input);
+                } else {
+                    break;
+                }
+            }
 
             socket.close();
+            System.out.println("Verbindung getrennt. Programmende.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
