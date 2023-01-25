@@ -6,6 +6,10 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class POP3Client {
+    private static final String SERVER = "10.2.129.148";
+    private static final int PORT = 10110;
+    private static final String USERNAME = "anna";
+    private static final String PASSWORD = "geheim";
     private Socket socket;
     private Scanner reader;
     private PrintWriter writer;
@@ -21,12 +25,16 @@ public class POP3Client {
         System.out.print("Versuche Verbindung... ");
 
         try {
-            socket = new Socket("10.2.129.148", 10110);
+            socket = new Socket(SERVER, PORT);
             reader = new Scanner(socket.getInputStream());
             writer = new PrintWriter(socket.getOutputStream());
             System.out.println("erfolgreich.");
+
+            String anmeldungstext = reader.nextLine();
+            System.out.println("EMPFANGEN: " + anmeldungstext);
         } catch (IOException e) {
-            System.err.println("Fehler beim Verbinden mit 10.2.129.148 auf " + "Port 10110");
+            System.err.println("Fehler beim Verbinden mit " + SERVER + " auf "
+                    + "Port " + PORT);
             System.exit(1); // Status 1 bedeutet allgemeiner Fehler
         }
     }
@@ -37,6 +45,14 @@ public class POP3Client {
      */
     private void anmelden() {
         System.out.println("Hier kommt die Anmeldung hin");
+        writer.println("USER " + USERNAME);
+        writer.flush();
+        System.out.println("Hä?");
+
+        reader.nextLine();
+        String antwort = reader.nextLine();
+        System.out.println("EMPFANGEN: " + antwort);
+
     }
 
     private void listeMails() {
