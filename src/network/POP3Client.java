@@ -114,11 +114,44 @@ public class POP3Client {
 
         for (int id: idListe) {
             holeMail(id);
+            loescheMail(id);
+
         }
+    }
+
+    private void loescheMail(int id) {
+        writer.println("DELE " + id); writer.flush();
+        String antwort = reader.nextLine();
+        if (antwort.startsWith("+OK")) {
+            System.out.println("E-Mail " + id + " geloescht.");
+        } else {
+            System.out.println("FEHLER beim LÖSCHEN von E-Mail " + id);
+        }
+
     }
 
     private void holeMail(int id) {
         System.out.println("Hole Mail mit ID " + id);
+
+        // Sende "RETR <id>"
+        writer.println("RETR " + id); writer.flush();
+
+        // Server-Fehler: Sendet KEIN "+OK"
+        String antwort;
+
+        do {
+            // Lese wiederholt Zeile für Zeile
+            antwort = reader.nextLine();
+
+            if (antwort.equals("")) {
+                continue;
+            }
+
+            // Gib sie auf der Konsole aus
+            System.out.println(antwort);
+
+            // Wenn die Zeile "." ist, beende Schleife
+        } while (!antwort.equals("."));
     }
 
     private void beendeVerbindung() {
