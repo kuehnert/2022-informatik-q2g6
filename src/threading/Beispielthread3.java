@@ -3,6 +3,13 @@ package threading;
 public class Beispielthread3 {
     static long start;
 
+    public static void missZeit(String name, long start) {
+        long ende = System.currentTimeMillis();
+        double dauer = (ende - start) / 1000.0;
+        System.out.printf("%s DAUER: %.1f Sekunden. %n", name.toUpperCase(),
+                dauer);
+    }
+
     public static void main(String[] args) {
         Aufgabe3 a1 = new Aufgabe3(1);
         Aufgabe3 a2 = new Aufgabe3(2);
@@ -17,11 +24,7 @@ public class Beispielthread3 {
         a3.start();
 
         // Miss Zeit
-        long ende = System.currentTimeMillis();
-        double dauer = (ende - start) / 1000.0;
-        System.out.printf("DAUER: %.1f Sekunden. %n", dauer);
-
-        System.out.println("ENDE");
+        missZeit("Hauptprogramm", start);
     }
 }
 
@@ -34,6 +37,7 @@ class Aufgabe3 extends Thread {
 
     @Override
     public void run() {
+        long start = System.currentTimeMillis();
         System.out.println("Aufgabe " + nummer + " START");
 
         try {
@@ -41,6 +45,6 @@ class Aufgabe3 extends Thread {
         } catch (InterruptedException e) {
         }
 
-        System.out.println("Aufgabe " + nummer + " ENDE");
+        Beispielthread3.missZeit("Aufgabe " + nummer, start);
     }
 }
