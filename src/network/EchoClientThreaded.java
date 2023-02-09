@@ -18,7 +18,7 @@ public class EchoClientThreaded {
         tastatur = new Scanner(System.in);
 
         try {
-            Socket socket = new Socket("10.2.129.148", 10007);
+            socket = new Socket("10.2.129.148", 10007);
             reader =
                     new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream());
@@ -36,46 +36,37 @@ public class EchoClientThreaded {
         // 2. Lies Eingaben über Tastatur ein und
         //    sende sie über den writer
         //    es sei denn, es wird "quit" eingegeben
+        System.out.println("Willkommen beim Echo-Client. Gib 'quit' ein, um " + "das Programm zu beenden.");
 
+        String eingabe;
+        while (empfangsThread.isAlive()) {
+            eingabe = tastatur.nextLine();
+
+            if (!empfangsThread.isAlive()) {
+                System.out.println("Empfangsthread hat die Nachricht " +
+                        "bekommen, dass der Server die Verbindung beendet hat");
+                break;
+            } else if (eingabe.equalsIgnoreCase("quit")) {
+                System.out.println("Hier bin ich nicht");
+                break;
+            } else {
+                System.out.println("SENDE: " + eingabe);
+                writer.println(eingabe);
+                writer.flush();
+                System.out.println("Gesendet");
+            }
+        }
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Ciao.");
     }
 
     public static void main(String[] args) {
         new EchoClientThreaded().starteChat();
-    }
-
-    private static void ersatzteillager() {
-        /*
-        // Empfange die Begrüßung vom Server & gib sie aus
-        String input = reader.nextLine();
-        System.out.println("RECEIVED: " + input);
-        // Empfange Leerzeile, Fehler im Server
-        input = reader.nextLine();
-        System.out.println("RECEIVED: " + input);
-        String botschaft = "";
-
-        // Hier kommt eine Schleife drumherum:
-        while (true) {
-            // Erfrage eine Eingabe vom Nutzer und sende sie über die Socket
-            System.out.print("Eingabe: ");
-            botschaft = tastatur.nextLine();
-
-            if (!botschaft.equalsIgnoreCase("quit")) {
-                System.out.println("EINGABE: " + botschaft);
-                writer.println(botschaft);
-                writer.flush();
-
-                // Empfange die Antwort vom Server & gib sie aus
-                input = reader.nextLine();
-                System.out.println("RECEIVED: " + input);
-            } else {
-                break;
-            }
-        }
-
-        socket.close();
-        System.out.println("Verbindung getrennt. Programmende.");
-
-         */
     }
 }
 
@@ -88,16 +79,27 @@ class EchoClientEmpfangsThread extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Empfangsthread gestartet");
         String response;
 
         while (true) {
             try {
                 response = reader.readLine();
+                if (response == null) {
+                    System.out.println("Server hat die Verbindung getrennt.");
+                    break;
+                }
+
                 System.out.println("EMPFANGEN: " + response);
             } catch (IOException e) {
                 // Thread beenden
-                return;
+                System.err.println("Thread wurde gekillt weil wir die " +
+                        "Verbindung beenden. Auslöser ist Schließen der " +
+                        "Socket");
+                break;
             }
         }
+
+        System.out.println("Empfangs-Thread beendet.");
     }
 }
