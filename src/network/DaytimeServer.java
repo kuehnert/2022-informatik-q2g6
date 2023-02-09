@@ -16,7 +16,7 @@ public class DaytimeServer {
         } catch (IOException e) {
             System.err.println("FEHLER: Port 10013 bereits geöffnet");
             System.exit(1);
-        }
+        }#
 
         // accept wartet 1. auf einen Client, der sich verbinden will
         // und 2. stellt die Verbindung her
