@@ -23,7 +23,6 @@ public class EchoServer {
     // 2. (opt) Verwende eine Schleife, um mehrere Clients hintereinander zu
     // bedienen
     // 3. Verwende Threads, um mehrere Clients _gleichzeitig_ zu behandeln
-
     public void run() {
         // Warte auf Client und verbinde Dich dann mit ihm
         try {
@@ -38,34 +37,47 @@ public class EchoServer {
     }
 
     private void behandleClient(Socket clientVerbindung) {
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(clientVerbindung.getInputStream()));
-        BufferedWriter writer =
-                new BufferedWriter(new OutputStreamWriter(clientVerbindung.getOutputStream()));
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
+
+        try {
+            reader =
+                    new BufferedReader(new InputStreamReader(clientVerbindung.getInputStream()));
+            writer =
+                    new BufferedWriter(new OutputStreamWriter(clientVerbindung.getOutputStream()));
+        } catch (IOException e) {
+            System.err.println("Fehler beim Kommunizieren mit dem Client. " + "Beende Thread.");
+            return;
+        }
+
         System.out.printf("Neue Verbindung mit %s%n",
                 clientVerbindung.getInetAddress());
 
-        // LF = Line Feed
-        // CR = Carriage Return
-        // Windows: <LF><CR> <10><13>
-        // Linux, ToysRUs Mac: <LF> <10>
-
         // Eigentliche Arbeit mit dem Client
         while (true) {
-            String response = reader.readLine();
-            if (response.equalsIgnoreCase("QUIT")) {
-                break;
-            }
+            try {
+                String response = reader.readLine();
+                if (response.equalsIgnoreCase("QUIT")) {
+                    break;
+                }
 
-            System.out.println("Empfangen: " + response);
-            writer.write(String.format(response, "%s%n") );
-            writer.flush();
+                System.out.println("Empfangen: " + response);
+                writer.write(response + "\n\r");
+                writer.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // Aufräumarbeiten
-        reader.close();
-        writer.close();
-        clientVerbindung.close();
+        try {
+            reader.close();
+            writer.close();
+            clientVerbindung.close();
+        } catch (IOException e) {
+            System.err.println("Fehler beim Schließen der Client-Verbindung. "
+                    + "Nicht schlimm.");
+        }
     }
 
     public static void main(String[] args) {
@@ -76,3 +88,8 @@ public class EchoServer {
         run();
     }
 }
+
+// LF = Line Feed
+// CR = Carriage Return
+// Windows: <LF><CR> <10><13>
+// Linux, Mac: <LF> <10>
