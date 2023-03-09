@@ -1,11 +1,9 @@
 package network;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 /*
  * Beliebig viele Clients können sich über Port 10666 verbinden und miteinander
@@ -17,10 +15,12 @@ import java.util.Scanner;
 public class ChatServer {
     public static final int PORT = 10666;
     private ServerSocket serverSocket;
+    private ArrayList<ChatServerClientThread> clientThreads;
 
     public ChatServer() {
         try {
             serverSocket = new ServerSocket(PORT);
+            clientThreads = new ArrayList<>();
         } catch (IOException e) {
             System.err.println("Fehler beim Öffnen von Port " + PORT);
             System.exit(1);
@@ -33,12 +33,23 @@ public class ChatServer {
         while (true) {
             try {
                 // Warte auf Client
-                Socket neuerClient = serverSocket.accept();
+                Socket neueClientSocket = serverSocket.accept();
                 // Wenn verbunden, starte einen ClientThread
-                new ChatServerClientThread(neuerClient).start();
+                var neuerClient = new ChatServerClientThread(this,
+                        neueClientSocket);
+                clientThreads.add(neuerClient);
+                neuerClient.start();
+                System.out.println("Client Nr. " + clientThreads.size() + " " +
+                        "verbunden!");
             } catch (IOException e) {
                 System.err.println("Fehler bei Verbindung mit Client");
             }
+        }
+    }
+
+    public void sendeAnAlle(ChatServerClientThread client, String botschaft) {
+        for (var empfaenger: clientThreads) {
+            empfaenger.sende(client.getName() + ": " + botschaft);
         }
     }
 
@@ -48,21 +59,25 @@ public class ChatServer {
 }
 
 class ChatServerClientThread extends Thread {
+    private ChatServer server;
     private Socket clientSocket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private String name;
 
-    public ChatServerClientThread(Socket clientSocket) {
+    public ChatServerClientThread(ChatServer server, Socket clientSocket) {
+        this.server = server;
         this.clientSocket = clientSocket;
 
         try {
+            name = clientSocket.getInetAddress().getCanonicalHostName();
             reader =
                     new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             writer =
                     new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         } catch (IOException e) {
             // TODO
-            System.err.println("Fehler beim Schreiben auf dem Client");
+            System.err.println("Fehler beim Schreiben auf dem Client " + name);
             System.exit(2);
         }
     }
@@ -75,7 +90,7 @@ class ChatServerClientThread extends Thread {
     @Override
     public void run() {
         String empfangen;
-        System.out.println("ClientThread gestartet");
+        System.out.println("ClientThread gestartet mit: " + name);
         writer.println("Willkommen beim Chat-Server! Gib QUIT ein um zu " +
                 "beenden");
         writer.flush();
@@ -83,11 +98,13 @@ class ChatServerClientThread extends Thread {
         while (true) {
             try {
                 empfangen = reader.readLine();
-                System.out.println("Empfangen: " + empfangen);
+                System.out.println(name + ": " + empfangen);
 
                 if (empfangen == null || empfangen.equalsIgnoreCase("QUIT")) {
                     break;
                 }
+
+                server.sendeAnAlle(this, empfangen);
             } catch (IOException e) {
                 System.err.println("Fehler beim Empfangen: Client hat " +
                         "die Verbindung beendet");
@@ -102,6 +119,6 @@ class ChatServerClientThread extends Thread {
             // Ignore silently
         }
 
-        System.out.println("ClientThread beendet");
+        System.out.println("ClientThread beendet: " + name);
     }
 }
