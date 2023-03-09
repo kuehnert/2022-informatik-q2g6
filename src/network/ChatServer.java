@@ -1,10 +1,11 @@
 package network;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import org.w3c.dom.ls.LSOutput;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 /*
  * Beliebig viele Clients können sich über Port 10666 verbinden und miteinander
@@ -27,6 +28,8 @@ public class ChatServer {
     }
 
     public void run() {
+        System.out.println("ChatServer gestartet auf Port " + PORT);
+
         while (true) {
             try {
                 // Warte auf Client
@@ -46,11 +49,15 @@ public class ChatServer {
 
 class ChatServerClientThread extends Thread {
     private Socket clientSocket;
+    private BufferedReader reader;
     private PrintWriter writer;
 
     public ChatServerClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
+
         try {
+            reader =
+                    new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             writer =
                     new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         } catch (IOException e) {
@@ -60,15 +67,41 @@ class ChatServerClientThread extends Thread {
         }
     }
 
+    public void sende(String botschaft) {
+        writer.println(botschaft);
+        writer.flush();
+    }
+
     @Override
     public void run() {
-        writer.println("Schön dass Du da bist!");
+        String empfangen;
+        System.out.println("ClientThread gestartet");
+        writer.println("Willkommen beim Chat-Server! Gib QUIT ein um zu " +
+                "beenden");
         writer.flush();
-        writer.close();
+
+        while (true) {
+            try {
+                empfangen = reader.readLine();
+                System.out.println("Empfangen: " + empfangen);
+
+                if (empfangen == null || empfangen.equalsIgnoreCase("QUIT")) {
+                    break;
+                }
+            } catch (IOException e) {
+                System.err.println("Fehler beim Empfangen: Client hat " +
+                        "die Verbindung beendet");
+                break;
+            }
+        }
+
         try {
+            writer.close();
             clientSocket.close();
         } catch (IOException e) {
             // Ignore silently
         }
+
+        System.out.println("ClientThread beendet");
     }
 }
